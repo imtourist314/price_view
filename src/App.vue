@@ -1,7 +1,7 @@
 <template>
   <main class="container">
     <div class="topbar">
-      <h1>Database Tables</h1>
+      <h1>Database Table Viewer</h1>
       <button class="theme-toggle" @click="toggleTheme" :aria-pressed="theme === 'dark'" :title="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
         <span v-if="theme === 'dark'">🌙</span>
         <span v-else>☀️</span>
