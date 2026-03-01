@@ -11,24 +11,16 @@ REPO_DIR="$WORK_DIR/$REPO_NAME"
 
 BRANCH="aider-$(date +%Y%m%d-%H%M%S)"
 
+INSTRUCTIONS="./instructions.md"
+if [[ "$1" ]];then
+   INSTRUCTIONS=$1
+fi
+
+echo "Getting instructions from $INSTRUCTIONS file"
+
 aider \
   --env-file /Users/bik/dev/ai/aider/.env \
   --yes \
   --no-auto-commits \
-  --message-file ./instructions.md
-
-if git diff --quiet; then
-    echo "No changes detected"
-    exit 0
-fi
-
-git add .
-
-git commit -m "LLM automated changes"
-
-git push -u origin "$BRANCH"
-
-gh pr create \
-  --title "LLM Automated Changes" \
-  --body-file "generated_pr.md"
+  --message-file "$INSTRUCTIONS"
 
