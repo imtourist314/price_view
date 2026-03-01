@@ -44,6 +44,7 @@ async function load() {
   error.value = ''
   try {
     const list = await fetchTables()
+    console.log(list);
     tables.value = list.map(t => (typeof t === 'string' ? t : t.table_name)).filter(Boolean)
     if (!tables.value.includes(selected.value)) {
       selected.value = ''

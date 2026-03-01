@@ -10,7 +10,7 @@ export async function fetchItems() {
 }
 
 export async function fetchTables() {
-  const res = await fetch('http://127.0.0.1:8000/database/list', {
+  const res = await fetch('/database/list', {
     headers: { 'Accept': 'text/html,application/json' }
   })
   if (!res.ok) {
