@@ -1,33 +1,27 @@
-feat(ui): database tables single-select listbox (~50ch width) with selection label and dev proxy
+feat(ui): load selected table preview (up to 10 rows)
 
 Summary
-- Vue UI lists database tables from http://127.0.0.1:8000/database/list and allows selecting one table at a time.
-- Listbox width set to approximately 50 characters for better readability.
-- Live-updating label reflects the currently selected table.
-- Dev proxy is configured to avoid CORS by routing /database/* to the backend.
+- Selecting a table name now fetches a small preview (up to 10 rows) from that table and renders it to the right of the table selector (stacks below on narrow screens).
+- The request uses the existing /data/:table endpoint with a limit parameter where supported.
 
 User-facing changes
-- The app shows “Database Tables” with a Reload button.
-- Once loaded, a single-select listbox (~50ch wide) appears; selecting a row updates the “Selected table” label.
-- Clear error message on failures and an empty state when no tables are available.
+- Click/select a table in the listbox to automatically load and display a preview grid beside the list.
+- Shows loading and error states for the preview, plus an empty-state message when no rows are returned.
 
 Implementation details
 - src/api.js
-  - fetchTables() calls the proxied path /database/list.
-  - Supports both raw JSON and HTML responses by parsing a <pre> block for JSON content.
-- vite.config.js
-  - Dev server proxy maps /database to http://127.0.0.1:8000 with changeOrigin enabled.
+  - fetchTableData(tableName, { limit }) now supports an optional limit query param (e.g. /data/my_table?limit=10).
 - src/App.vue
-  - Renders a single-select <select> populated with table names using fetchTables().
-  - Adds CSS to size the listbox to ~50 characters: #table-listbox { width: 50ch; }.
-  - Binds v-model for selection and updates an aria-live label with the current selection.
-  - Includes a “Reload” button and error handling UI.
+  - Watches the selected table and calls fetchTableData(..., { limit: 10 }).
+  - Renders a dynamic HTML table based on returned row shape (object rows, array rows, or primitive rows).
 
 Files changed
+- src/api.js
 - src/App.vue
 - generated_pr.md
 
 How to test
-1) Start the backend that serves http://127.0.0.1:8000/database/list.
-2) Run the frontend dev server: npm run dev
-3) Open http://localhost:5173, click “Reload,” pick a table from the listbox, and verify the selection label updates.
+1) Start the backend on http://127.0.0.1:8000.
+2) Run the frontend: npm run dev
+3) Open http://localhost:5173.
+4) Select a table name; verify a preview table loads and contains at most 10 rows.

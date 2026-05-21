@@ -11,6 +11,8 @@ if [[ -z "$REPO_NAME" ]]; then
   REPO_NAME="${PWD:t}"
 fi
 
+echo "REPO_NAME: $REPO_NAME"
+
 # Ensure default branch is 'main'
 git branch -M main
 
